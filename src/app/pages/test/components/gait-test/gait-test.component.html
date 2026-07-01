@@ -1,0 +1,92 @@
+<!-- ===== GAIT TEST ===== -->
+
+<!-- Progress dots -->
+<div class="test-progress">
+  <div class="test-progress-dot" [class.done]="gaitStarted()" [class.active]="!gaitStarted()">
+    <div class="tpd-num">1</div><div class="tpd-label">เตรียม</div>
+  </div>
+  <div class="test-progress-line" [class.done]="gaitStarted()"></div>
+  <div class="test-progress-dot" [class.done]="gaitDone()" [class.active]="testActive() && !gaitDone()">
+    <div class="tpd-num">2</div><div class="tpd-label">เดิน</div>
+  </div>
+  <div class="test-progress-line" [class.done]="gaitDone()"></div>
+  <div class="test-progress-dot" [class.active]="gaitDone()">
+    <div class="tpd-num">3</div><div class="tpd-label">ผลลัพธ์</div>
+  </div>
+</div>
+
+<!-- Before: Intro -->
+<div class="test-intro-card" *ngIf="!gaitStarted() && !gaitDone()">
+  <img src="assets/icons/walk/walking.png" alt="Gait Test" class="test-intro-img">
+  <h2 class="test-intro-title">ทดสอบการเดิน</h2>
+  <p class="test-intro-desc">วัดความเร็ว ความมั่นคง และความสม่ำเสมอของการเดินของคุณ</p>
+  <div class="test-intro-steps">
+    <div class="tis-item"><span class="tis-num">1</span>หาพื้นที่เดินตรงอย่างน้อย 10 เมตร</div>
+    <div class="tis-item"><span class="tis-num">2</span>วางโทรศัพท์ไว้ในกระเป๋าหรือถือให้นิ่ง</div>
+    <div class="tis-item"><span class="tis-num">3</span>กดเริ่ม แล้วเดินด้วยความเร็วปกติ</div>
+    <div class="tis-item"><span class="tis-num">4</span>เดินไปกลับ 20 วินาที</div>
+  </div>
+  <button class="btn btn-primary btn-large btn-full" (click)="startTest()" [disabled]="testActive() || gaitDone()">
+    <span class="btn-icon">🚶</span> เริ่มทดสอบการเดิน
+  </button>
+</div>
+
+<!-- During: Active -->
+<div class="test-active-card" *ngIf="testActive() && !gaitDone()">
+  <div class="test-active-visual">
+    <img src="assets/icons/walk/walking1.png" alt="Walking" class="test-active-img">
+    <div class="gait-waves">
+      <span class="gw-bar" *ngFor="let i of [1,2,3,4,5,6,7,8,9,10]" [class.active]="testActive()"></span>
+    </div>
+  </div>
+  <div class="record-timer font-mono">{{ gaitTimer() }}</div>
+  <div class="test-active-status">{{ gaitStatus() }}</div>
+  <div class="test-sensor-badge"><span class="tsb-dot"></span> กำลังบันทึกข้อมูล...</div>
+</div>
+
+<!-- Results -->
+<div class="test-result-card" *ngIf="gaitDone() && gaitResults()">
+  <div class="test-result-title">🚶 ผลการทดสอบการเดิน</div>
+
+  <div class="test-result-item">
+    <div class="tri-icon tri-icon-speed">🏃</div>
+    <div class="tri-info">
+      <div class="tri-label">ความเร็วในการเดิน</div>
+      <div class="tri-bar-bg"><div class="tri-bar" [style.width.%]="(gaitResults()!.walkingSpeed / 2) * 100" [style.background]="gaitResults()!.walkingSpeed >= 1.2 ? '#05C134' : gaitResults()!.walkingSpeed >= 0.8 ? '#F59E0B' : '#C10508'"></div></div>
+    </div>
+    <div class="tri-value" [style.color]="gaitResults()!.walkingSpeed >= 1.2 ? '#05C134' : gaitResults()!.walkingSpeed >= 0.8 ? '#F59E0B' : '#C10508'">{{ gaitResults()!.walkingSpeed }} <span class="tri-unit">m/s</span></div>
+  </div>
+
+  <div class="test-result-item">
+    <div class="tri-icon tri-icon-balance">🧘</div>
+    <div class="tri-info">
+      <div class="tri-label">ความมั่นคงในการทรงตัว</div>
+      <div class="tri-bar-bg"><div class="tri-bar" [style.width.%]="gaitResults()!.balanceScore" [style.background]="gaitResults()!.balanceScore >= 80 ? '#05C134' : gaitResults()!.balanceScore >= 60 ? '#F59E0B' : '#C10508'"></div></div>
+    </div>
+    <div class="tri-value" [style.color]="gaitResults()!.balanceScore >= 80 ? '#05C134' : gaitResults()!.balanceScore >= 60 ? '#F59E0B' : '#C10508'">{{ gaitResults()!.balanceScore }} <span class="tri-unit">คะแนน</span></div>
+  </div>
+
+  <div class="test-result-item">
+    <div class="tri-icon tri-icon-regularity">📊</div>
+    <div class="tri-info">
+      <div class="tri-label">ความสม่ำเสมอของการก้าวเดิน</div>
+      <div class="tri-bar-bg"><div class="tri-bar" [style.width.%]="gaitResults()!.regularity" [style.background]="gaitResults()!.regularity >= 80 ? '#05C134' : gaitResults()!.regularity >= 60 ? '#F59E0B' : '#C10508'"></div></div>
+    </div>
+    <div class="tri-value" [style.color]="gaitResults()!.regularity >= 80 ? '#05C134' : gaitResults()!.regularity >= 60 ? '#F59E0B' : '#C10508'">{{ gaitResults()!.regularity }}<span class="tri-unit">%</span></div>
+  </div>
+
+  <div class="test-result-total">
+    <div class="trt-label">คะแนนรวม</div>
+    <div class="trt-ring">
+      <svg width="110" height="110" style="transform:rotate(-90deg)">
+        <circle cx="55" cy="55" r="46" fill="none" stroke="var(--border)" stroke-width="8"/>
+        <circle cx="55" cy="55" r="46" fill="none"
+          [attr.stroke]="gaitResults()!.totalScore >= 70 ? '#05C134' : gaitResults()!.totalScore >= 45 ? '#F59E0B' : '#C10508'"
+          stroke-width="8" [attr.stroke-dasharray]="getGaitRingDash()" stroke-linecap="round"/>
+      </svg>
+      <div class="trt-value" [style.color]="gaitResults()!.totalScore >= 70 ? '#05C134' : gaitResults()!.totalScore >= 45 ? '#F59E0B' : '#C10508'">{{ gaitResults()!.totalScore }}<span class="trt-unit">/100</span></div>
+    </div>
+  </div>
+</div>
+
+<div class="test-sensor-note" *ngIf="!gaitDone()">📡 เซ็นเซอร์: Accelerometer + Gyroscope (DeviceMotion API)</div>

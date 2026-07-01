@@ -1,0 +1,119 @@
+<!-- ===== SPEECH TEST ===== -->
+
+<!-- Stage progress dots -->
+<div class="test-progress">
+  <div class="test-progress-dot" [class.done]="speechStageDone()[0]" [class.active]="speechStage() === 1 && !speechStageDone()[0]">
+    <div class="tpd-num">1</div>
+    <div class="tpd-label">อา</div>
+  </div>
+  <div class="test-progress-line" [class.done]="speechStageDone()[0]"></div>
+  <div class="test-progress-dot" [class.done]="speechStageDone()[1]" [class.active]="speechStage() === 2 && !speechStageDone()[1]">
+    <div class="tpd-num">2</div>
+    <div class="tpd-label">ปา ตา กา</div>
+  </div>
+  <div class="test-progress-line" [class.done]="speechStageDone()[1]"></div>
+  <div class="test-progress-dot" [class.done]="speechStageDone()[2]" [class.active]="speechStage() === 3 && !speechStageDone()[2]">
+    <div class="tpd-num">3</div>
+    <div class="tpd-label">ประโยค</div>
+  </div>
+</div>
+
+<!-- Before recording: Intro card -->
+<div class="test-intro-card" *ngIf="showIntro() && !recording() && !speechAllDone() && !speechStageDone()[speechStage()-1]">
+  <img src="assets/icons/voice/speech.png" alt="Speech Test" class="test-intro-img">
+  <h2 class="test-intro-title">{{ speechStageTitle() }}</h2>
+  <p class="test-intro-desc">{{ speechStageDesc() }}</p>
+  <div class="test-intro-steps">
+    <div class="tis-item"><span class="tis-num">1</span>กดปุ่ม 🎤 เพื่อเริ่มบันทึก</div>
+    <div class="tis-item"><span class="tis-num">2</span>พูดตามข้อความที่กำหนด</div>
+    <div class="tis-item"><span class="tis-num">3</span>{{ speechStage() === 3 ? 'กด ⏹ เมื่อพูดเสร็จ' : 'รอ 10 วินาทีให้บันทึกอัตโนมัติ' }}</div>
+  </div>
+  <button type="button" class="btn btn-primary btn-large btn-full" (click)="onStartRecording($event)" [disabled]="recording()">
+    <span class="btn-icon">🎤</span> เริ่มบันทึกเสียง
+  </button>
+</div>
+
+<!-- Permissions loading: Show while requesting mic but recording not yet started -->
+<div class="test-active-card" *ngIf="!showIntro() && !recording() && !speechAllDone() && !speechStageDone()[speechStage()-1]">
+  <div class="test-active-visual">
+    <div class="permission-loading-spinner" style="width:80px;height:80px;border-radius:50%;border:6px solid var(--border);border-top-color:var(--primary);animation:spin 1s linear infinite;margin:0 auto;"></div>
+  </div>
+  <div class="test-active-status">{{ speechStatus() }}</div>
+  <div class="test-sensor-badge">
+    <span class="tsb-dot" style="background:var(--warning)"></span> กำลังขอสิทธิ์ไมโครโฟน...
+  </div>
+</div>
+
+<!-- During recording: Active card -->
+<div class="test-active-card" *ngIf="recording()">
+  <div class="test-active-visual">
+    <img src="assets/icons/voice/speech1.png" alt="Recording" class="test-active-img">
+    <div class="speech-waves">
+      <span class="sw-bar" *ngFor="let i of [1,2,3,4,5,6,7,8,9,10,11,12]" [class.active]="recording()"></span>
+    </div>
+  </div>
+  <div class="record-timer font-mono" *ngIf="speechStage() !== 3">{{ timeRemaining() }}</div>
+  <div class="test-active-status">{{ speechStatus() }}</div>
+  <div class="test-sensor-badge">
+    <span class="tsb-dot"></span> กำลังบันทึก...
+  </div>
+  <button type="button" class="btn btn-danger btn-full" (click)="onStopRecording($event)" *ngIf="speechStage() === 3" style="margin-top: 16px;">
+    ⏹️ หยุดบันทึกเสียง
+  </button>
+</div>
+
+<!-- Stage done but not all: next step prompt (Bug #2 fixed: removed duplicate expression) -->
+<div class="test-active-card" *ngIf="!recording() && !speechAllDone() && speechStageDone()[speechStage()-1]">
+  <div class="test-intro-icon" style="font-size:48px">✅</div>
+  <div class="test-active-status" style="font-size:16px;font-weight:600;color:var(--accent-good)">บันทึกขั้นตอนที่ {{ speechStage() }} แล้ว</div>
+  <button type="button" class="btn btn-primary btn-large btn-full" (click)="onNextStage($event)" *ngIf="speechStage() < 3">
+    <span class="btn-icon">🎤</span> เริ่มขั้นตอนที่ {{ speechStage() + 1 }}
+  </button>
+</div>
+
+<!-- Results -->
+<div class="test-result-card" *ngIf="speechAllDone() && speechResults()">
+  <div class="test-result-title">🎤 ผลการทดสอบเสียง</div>
+
+  <div class="test-result-item">
+    <div class="tri-icon tri-icon-speed">📊</div>
+    <div class="tri-info">
+      <div class="tri-label">ความสม่ำเสมอของเสียง</div>
+      <div class="tri-bar-bg"><div class="tri-bar" [style.width.%]="speechResults()!.consistency" [style.background]="speechResults()!.consistency >= 70 ? '#05C134' : speechResults()!.consistency >= 45 ? '#F59E0B' : '#C10508'"></div></div>
+    </div>
+    <div class="tri-value" [style.color]="speechResults()!.consistency >= 70 ? '#05C134' : speechResults()!.consistency >= 45 ? '#F59E0B' : '#C10508'">{{ speechResults()!.consistency }}%</div>
+  </div>
+
+  <div class="test-result-item">
+    <div class="tri-icon tri-icon-balance">📈</div>
+    <div class="tri-info">
+      <div class="tri-label">ความมั่นคงของระดับเสียง</div>
+      <div class="tri-bar-bg"><div class="tri-bar" [style.width.%]="speechResults()!.pitchStability" [style.background]="speechResults()!.pitchStability >= 70 ? '#05C134' : speechResults()!.pitchStability >= 45 ? '#F59E0B' : '#C10508'"></div></div>
+    </div>
+    <div class="tri-value" [style.color]="speechResults()!.pitchStability >= 70 ? '#05C134' : speechResults()!.pitchStability >= 45 ? '#F59E0B' : '#C10508'">{{ speechResults()!.pitchStability }}%</div>
+  </div>
+
+  <div class="test-result-item">
+    <div class="tri-icon tri-icon-regularity">⏱️</div>
+    <div class="tri-info">
+      <div class="tri-label">อัตราการพูด</div>
+      <div class="tri-bar-bg"><div class="tri-bar" [style.width.%]="getSpeechRateBarWidth()" [style.background]="speechResults()!.speechRate >= 3 ? '#05C134' : speechResults()!.speechRate >= 2 ? '#F59E0B' : '#C10508'"></div></div>
+    </div>
+    <div class="tri-value" [style.color]="speechResults()!.speechRate >= 3 ? '#05C134' : speechResults()!.speechRate >= 2 ? '#F59E0B' : '#C10508'">{{ speechResults()!.speechRate }} <span class="tri-unit">พยางค์/วิ</span></div>
+  </div>
+
+  <div class="test-result-total">
+    <div class="trt-label">คะแนนรวม</div>
+    <div class="trt-ring">
+      <svg width="110" height="110" style="transform:rotate(-90deg)">
+        <circle cx="55" cy="55" r="46" fill="none" stroke="var(--border)" stroke-width="8"/>
+        <circle cx="55" cy="55" r="46" fill="none"
+          [attr.stroke]="speechResults()!.totalScore >= 70 ? '#05C134' : speechResults()!.totalScore >= 45 ? '#F59E0B' : '#C10508'"
+          stroke-width="8" [attr.stroke-dasharray]="getSpeechResultRingDash()" stroke-linecap="round"/>
+      </svg>
+      <div class="trt-value" [style.color]="speechResults()!.totalScore >= 70 ? '#05C134' : speechResults()!.totalScore >= 45 ? '#F59E0B' : '#C10508'">{{ speechResults()!.totalScore }}<span class="trt-unit">%</span></div>
+    </div>
+  </div>
+</div>
+
+<div class="test-sensor-note" *ngIf="!speechAllDone()">🎤 ไมโครโฟน — กดปุ่มเพื่อเริ่มบันทึกในแต่ละขั้นตอน</div>

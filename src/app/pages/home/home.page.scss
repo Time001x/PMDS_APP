@@ -1,0 +1,181 @@
+/* =====================================================
+   PMDS - Home Page Styles
+   ====================================================== */
+
+#screen-home {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  height: 100dvh;
+  background: #EFEFEF;
+  overflow: hidden;
+}
+
+.home-content {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+  padding: 20px;
+  padding-bottom: 20px;
+}
+
+.home-greeting { margin-bottom: 24px; }
+.home-greeting .greeting-small { font-size: 13px; color: #666; font-weight: 500; }
+.home-greeting .greeting-name { font-size: 28px; font-weight: 700; margin-top: 4px; color: #333; }
+.home-greeting .greeting-sub { font-size: 14px; color: #888; margin-top: 4px; }
+
+.risk-card {
+  background: white;
+  border: none;
+  border-radius: 20px;
+  padding: 24px;
+  margin-bottom: 20px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+}
+
+.risk-card-top { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 20px; }
+.risk-label { font-size: 12px; font-weight: 700; letter-spacing: 0.1em; color: #666; text-transform: uppercase; }
+.risk-value { font-size: 52px; font-weight: 700; font-family: 'Space Mono', monospace; line-height: 1; color: #333; }
+.risk-level { font-size: 13px; font-weight: 600; margin-top: 6px; }
+
+.section-title { font-size: 16px; font-weight: 700; color: #333; margin-bottom: 14px; }
+
+.history-list { display: flex; flex-direction: column; gap: 10px; }
+
+.history-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  background: white;
+  border: none;
+  border-radius: 14px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  cursor: pointer;
+  transition: transform .2s;
+}
+
+.history-item:hover { transform: translateY(-2px); }
+.history-icon { font-size: 16px; width: 28px; text-align: center; }
+.history-info { flex: 1; }
+.history-date { font-size: 12px; color: #888; font-family: 'Space Mono', monospace; }
+.history-score { font-size: 14px; font-weight: 600; color: #333; }
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.badge-teal { background: rgba(0,212,170,0.12); color: #00d4aa; }
+.badge-warn { background: rgba(245,158,11,0.12); color: #F59E0B; }
+.badge-danger { background: rgba(239,68,68,0.12); color: #ef4444; }
+.badge-normal { background: rgba(5,193,52,0.1); color: #05C134; border: 1px solid rgba(5,193,52,0.25); }
+.badge-risk { background: rgba(193,5,8,0.1); color: #C10508; border: 1px solid rgba(193,5,8,0.25); }
+
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  background: #EB661E;
+  border-bottom: none;
+  flex-shrink: 0;
+}
+
+.topbar-logo { display: flex; align-items: center; gap: 10px; }
+.logo-mark {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: rgba(255,255,255,0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Space Mono', monospace;
+  font-size: 13px;
+  font-weight: 700;
+  color: white;
+}
+
+.logo-text { font-size: 15px; font-weight: 700; letter-spacing: 0.05em; color: white; }
+.topbar-right { display: flex; align-items: center; gap: 12px; }
+
+.btn-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  border: 1px solid rgba(255,255,255,0.3);
+  background: transparent;
+  color: white;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+}
+
+.bottom-nav {
+  display: flex;
+  background: white;
+  border-top: 1px solid #eee;
+  padding: 8px 0;
+  padding-bottom: max(8px, env(safe-area-inset-bottom));
+  flex-shrink: 0;
+  margin-top: auto;
+  box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
+}
+
+.nav-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 8px 4px;
+  cursor: pointer;
+  transition: all .2s;
+  border: none;
+  background: transparent;
+  color: #999;
+}
+
+.nav-item.active { color: #EB661E; }
+.nav-item:active { transform: scale(0.92); }
+.nav-icon { font-size: 22px; line-height: 1; }
+.nav-label { font-size: 10px; font-weight: 600; }
+
+.risk-bar-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.risk-bar-label { font-size: 12px; color: #666; min-width: 40px; }
+
+.risk-bar-track {
+  flex: 1;
+  height: 6px;
+  background: #eee;
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.risk-bar-fill {
+  height: 100%;
+  border-radius: 3px;
+  transition: width 0.4s ease;
+}
+
+.card-glow { box-shadow: 0 4px 20px rgba(0,0,0,0.08); }
+.mb-24 { margin-bottom: 24px; }
+.font-mono { font-family: 'Space Mono', monospace; }
+.small { font-size: 13px; }
+.text-center { text-align: center; }
+.text-muted { color: #888; }

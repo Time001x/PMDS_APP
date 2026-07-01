@@ -1,0 +1,55 @@
+/* =====================================================
+   PMDS - Register Page Styles
+   ===================================================== */
+
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{height:100%;height:100dvh}
+body{background:#EB661E;font-family:'Sarabun',sans-serif;min-height:100%;min-height:100dvh;overflow-x:hidden}
+
+#app{position:relative;width:100%;min-height:100dvh;background:#EFEFEF;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;padding-bottom:env(safe-area-inset-bottom)}
+
+.bg-orange{position:fixed;top:0;left:0;width:100%;height:100dvh;background:#EB661E;border-radius:0;z-index:0;pointer-events:none}
+
+.main-title{position:relative;z-index:2;text-align:center;padding-top:max(50px, env(safe-area-inset-top) + 30px);padding-bottom:24px;color:white;font-size:clamp(56px, 18vw, 90px);font-family:'Schoolbell',cursive;font-weight:400;line-height:1;pointer-events:none}
+
+.di{position:fixed;z-index:5;pointer-events:none;object-fit:contain}
+
+.card-wrap{position:relative;z-index:3;display:flex;justify-content:center;padding:0 16px 40px;margin-top:10px}
+
+.card{width:min(360px, 100%);background:white;box-shadow:0 8px 32px rgba(0,0,0,0.12);border-radius:24px;padding:24px 20px 28px}
+
+.card-title{text-align:center;color:#333;font-size:clamp(20px, 5vw, 24px);font-family:'Sarabun',sans-serif;font-weight:600;margin-bottom:20px}
+
+.fg{margin-bottom:14px}
+
+.fl{display:block;font-size:13px;font-weight:600;color:#555;margin-bottom:6px;letter-spacing:0.02em}
+
+.fi{width:100%;padding:12px 16px;background:#f5f5f5;border:2px solid transparent;border-radius:12px;font-family:'Sarabun',sans-serif;font-size:15px;font-weight:400;color:#000;outline:none;display:block;transition:all .2s}
+.fi::placeholder{color:#aaa;font-size:14px}
+.fi:focus{background:#fff;border-color:#EB661E;box-shadow:0 0 0 4px rgba(235,102,30,0.1)}
+
+.fs{width:100%;padding:12px 16px;background:#f5f5f5;border:2px solid transparent;border-radius:12px;font-family:'Sarabun',sans-serif;font-size:15px;font-weight:400;color:#333;outline:none;display:block;cursor:pointer;-webkit-appearance:none;appearance:none;transition:all .2s;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23666' d='M6 8L1 3h10z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 16px center;padding-right:40px}
+.fs:focus{background-color:#fff;border-color:#EB661E;box-shadow:0 0 0 4px rgba(235,102,30,0.1)}
+
+.reg-btn{width:100%;max-width:200px;height:48px;background:#EB661E;border:none;border-radius:12px;cursor:pointer;font-family:'Sarabun',sans-serif;font-size:17px;font-weight:600;color:white;line-height:48px;margin:20px auto 0;display:block;transition:all .2s;text-align:center;box-shadow:0 4px 16px rgba(235,102,30,0.3)}
+.reg-btn:hover{transform:translateY(-2px);box-shadow:0 6px 24px rgba(235,102,30,0.4)}
+.reg-btn:active{transform:scale(0.98)}
+
+.login-link{text-align:center;margin-top:16px;font-size:14px}
+.login-link .t{color:#666}
+.login-link .u{color:#EB661E;text-decoration:none;cursor:pointer;font-weight:600}
+.login-link .u:hover{text-decoration:underline}
+
+#toast{position:fixed;bottom:max(24px, env(safe-area-inset-bottom));left:50%;transform:translateX(-50%) translateY(100px);background:#333;border:1px solid #EB661E;padding:14px 24px;border-radius:14px;font-size:14px;font-family:'Sarabun',sans-serif;z-index:9999;color:white;transition:transform .3s cubic-bezier(.34,1.56,.64,1);max-width:85vw;text-align:center;box-shadow:0 8px 32px rgba(0,0,0,0.3);pointer-events:none}
+#toast.show{transform:translateX(-50%) translateY(0)}
+
+@media (max-height:600px){
+  .main-title{font-size:clamp(40px, 14vw, 60px);padding-top:max(30px, env(safe-area-inset-top) + 15px);padding-bottom:16px}
+  .card{padding:20px 16px 24px}
+  .card-title{font-size:18px;margin-bottom:14px}
+  .fg{margin-bottom:10px}
+  .fi,.fs{padding:10px 14px}
+  .reg-btn{height:44px;line-height:44px;margin-top:14px}
+}
+
+@media (min-width:768px){.card{width:400px;padding:32px 28px 36px}}

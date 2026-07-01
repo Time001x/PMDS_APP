@@ -1,0 +1,100 @@
+<div id="app">
+
+  <div id="toast"></div>
+  <div class="modal-overlay" id="modal-overlay" #modalOverlay>
+    <div class="modal-sheet">
+      <div class="modal-handle"></div>
+      <div id="modal-content"></div>
+    </div>
+  </div>
+
+  <div class="screen active" id="screen-profile">
+
+    <div class="topbar">
+      <div class="topbar-logo">
+        <div class="logo-mark">PD</div>
+        <span class="logo-text">โปรไฟล์</span>
+      </div>
+    </div>
+
+    <div class="profile-content" id="profile-content">
+      <div class="profile-hero">
+        <div class="profile-avatar">{{ initials }}</div>
+        <div class="profile-name">{{ currentUser?.name }}</div>
+        <div class="profile-email">{{ currentUser?.email }}</div>
+        <div class="profile-stats">
+          <div class="profile-stat">
+            <div class="profile-stat-val">{{ historyCount }}</div>
+            <div class="profile-stat-label">ครั้งที่ทดสอบ</div>
+          </div>
+          <div class="profile-stat">
+            <div class="profile-stat-val">{{ avgRisk }}{{ avgRisk !== '--' ? '%' : '' }}</div>
+            <div class="profile-stat-label">ความเสี่ยงเฉลี่ย</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section-title mb-16">ข้อมูลส่วนตัว</div>
+      <div class="card mb-24">
+        <div class="flex-between" style="padding:12px 0;border-bottom:1px solid var(--border)">
+          <span class="text-muted small">👤 ชื่อ-นามสกุล</span>
+          <span class="small" style="font-weight:500">{{ currentUser?.name }}</span>
+        </div>
+        <div class="flex-between" style="padding:12px 0;border-bottom:1px solid var(--border)">
+          <span class="text-muted small">🎂 ช่วงอายุ</span>
+          <span class="small" style="font-weight:500">{{ currentUser?.age || 'ไม่ระบุ' }}</span>
+        </div>
+        <div class="flex-between" style="padding:12px 0;border-bottom:1px solid var(--border)">
+          <span class="text-muted small">⚧ เพศ</span>
+          <span class="small" style="font-weight:500">{{ currentUser?.gender || 'ไม่ระบุ' }}</span>
+        </div>
+        <div class="flex-between" style="padding:12px 0">
+          <span class="text-muted small">🏥 ประวัติสุขภาพ</span>
+          <span class="small" style="font-weight:500">{{ getHealthLabel(currentUser?.history) }}</span>
+        </div>
+      </div>
+
+      <div class="section-title mb-16">การตั้งค่า</div>
+      <div class="settings-list">
+        <div class="settings-item" (click)="showAbout()">
+          <div class="settings-icon">ℹ️</div>
+          <div class="settings-label">เกี่ยวกับระบบ PMDS</div>
+          <div class="settings-arrow">›</div>
+        </div>
+        <div class="settings-item" (click)="clearHistory()">
+          <div class="settings-icon">🗑️</div>
+          <div class="settings-label" style="color:var(--accent-warn)">ล้างประวัติการทดสอบ</div>
+          <div class="settings-arrow">›</div>
+        </div>
+        <div class="settings-item" (click)="logout()">
+          <div class="settings-icon">🚪</div>
+          <div class="settings-label" style="color:var(--accent-danger)">ออกจากระบบ</div>
+          <div class="settings-arrow">›</div>
+        </div>
+      </div>
+      <div style="height:40px"></div>
+    </div>
+
+    <!-- Bottom Nav -->
+    <div class="bottom-nav">
+      <button class="nav-item" (click)="navTo('home')">
+        <span class="nav-icon">🏠</span>
+        <span class="nav-label">หน้าหลัก</span>
+      </button>
+      <button class="nav-item" (click)="navTo('test')">
+        <span class="nav-icon">🧪</span>
+        <span class="nav-label">ทดสอบ</span>
+      </button>
+      <button class="nav-item" (click)="navTo('test?view=history')">
+        <span class="nav-icon">📊</span>
+        <span class="nav-label">ประวัติ</span>
+      </button>
+      <button class="nav-item active" (click)="navTo('profile')">
+        <span class="nav-icon">👤</span>
+        <span class="nav-label">โปรไฟล์</span>
+      </button>
+    </div>
+
+  </div>
+
+</div>

@@ -1,0 +1,88 @@
+<div id="app">
+  <div class="bg-orange"></div>
+  <div class="main-title">PMDS</div>
+
+  <div class="card-wrap">
+    <div class="card">
+      <div class="card-title">สมัครสมาชิก</div>
+
+      <div class="fg">
+        <label class="fl">ชื่อ-นามสกุล</label>
+        <input
+          type="text"
+          class="fi"
+          [(ngModel)]="name"
+          placeholder="เช่น นายสมชาย ใจดี"
+        />
+      </div>
+
+      <div class="fg">
+        <label class="fl">อายุ</label>
+        <select class="fs" [(ngModel)]="age">
+          <option value="">-- เลือกช่วงอายุ --</option>
+          <option value="ต่ำกว่า 40 ปี">ต่ำกว่า 40 ปี</option>
+          <option value="40-49 ปี">40-49 ปี</option>
+          <option value="50-59 ปี">50-59 ปี</option>
+          <option value="60-69 ปี">60-69 ปี</option>
+          <option value="70-79 ปี">70-79 ปี</option>
+          <option value="80 ปีขึ้นไป">80 ปีขึ้นไป</option>
+        </select>
+      </div>
+
+      <div class="fg">
+        <label class="fl">เพศ</label>
+        <select class="fs" [(ngModel)]="gender">
+          <option value="">-- เลือกเพศ --</option>
+          <option value="ชาย">ชาย</option>
+          <option value="หญิง">หญิง</option>
+          <option value="ไม่ระบุ">ไม่ระบุ</option>
+        </select>
+      </div>
+
+      <div class="fg">
+        <label class="fl">อีเมล</label>
+        <input
+          type="email"
+          class="fi"
+          [(ngModel)]="email"
+          placeholder="your@email.com"
+        />
+      </div>
+
+      <div class="fg">
+        <label class="fl">รหัสผ่าน</label>
+        <input
+          type="password"
+          class="fi"
+          [(ngModel)]="password"
+          placeholder="อย่างน้อย 6 ตัวอักษร"
+        />
+      </div>
+
+      <div class="fg">
+        <label class="fl">ประวัติสุขภาพ</label>
+        <select class="fs" [(ngModel)]="history">
+          <option value="none">ไม่เคยได้รับการวินิจฉัย</option>
+          <option value="pd">ได้รับการวินิจฉัยโรคพาร์กินสัน</option>
+          <option value="suspect">สงสัยว่าอาจเป็นโรคพาร์กินสัน</option>
+          <option value="family">มีประวัติครอบครัว</option>
+        </select>
+      </div>
+
+      <button class="reg-btn" (click)="doRegister()">สมัครสมาชิก</button>
+
+      <div class="login-link">
+        <span class="t">มีบัญชีอยู่แล้ว? </span>
+        <span class="u" (click)="goLogin()">เข้าสู่ระบบ</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div
+  id="toast"
+  [class.show]="toastVisible"
+  [style.border-color]="toastType === 'good' ? '#10b981' : toastType === 'warn' ? '#f59e0b' : toastType === 'danger' ? '#ef4444' : '#EB661E'"
+>
+  {{ toastMessage }}
+</div>

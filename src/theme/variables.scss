@@ -1,0 +1,27 @@
+// Ionic Variables and Theming. For more info, please see:
+// https://ionicframework.com/docs/theming/
+
+:root {
+  --bg-deep: #F5F5F5;
+  --bg-card: #FFFFFF;
+  --accent-teal: #EB661E;
+  --accent-blue: #FF9A57;
+  --accent-warn: #F59E0B;
+  --accent-danger: #EF4444;
+  --accent-good: #10B981;
+  --text-primary: #333333;
+  --text-muted: #666666;
+  --text-dim: #999999;
+  --border: #E5E7EB;
+  --border-glow: rgba(235,102,30,.25);
+  --radius: 14px;
+  --radius-sm: 8px;
+}
+
+html, body {
+  font-family: 'Noto Sans Thai', 'Sarabun', sans-serif;
+  background: #F5F5F5;
+  color: #333333;
+  overflow: hidden;
+  height: 100%;
+}

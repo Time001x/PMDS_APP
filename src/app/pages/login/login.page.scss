@@ -1,0 +1,239 @@
+/* =====================================================
+   PMDS - Login Page Styles
+   ===================================================== */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  height: 100dvh;
+  overflow: hidden;
+  overscroll-behavior: none;
+}
+
+body {
+  font-family: 'Sarabun', sans-serif;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#app {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
+  height: 100dvh;
+  background: #EFEFEF;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+}
+
+.bg-orange {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  left: 0;
+  top: 0;
+  background: #EB661E;
+  border-radius: 0;
+  z-index: 1;
+}
+
+.main-title {
+  position: relative;
+  z-index: 2;
+  color: white;
+  font-size: clamp(48px, 15vw, 100px);
+  font-family: 'Schoolbell', cursive;
+  font-weight: 400;
+  line-height: 1;
+  margin-bottom: 20px;
+  pointer-events: none;
+  text-align: center;
+}
+
+.di {
+  position: absolute;
+  z-index: 5;
+  pointer-events: none;
+  object-fit: contain;
+}
+
+.card {
+  position: relative;
+  width: min(340px, 90%);
+  background: white;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+  border-radius: 24px;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 40px 24px 32px;
+  margin: 0 auto;
+}
+
+.t-title {
+  color: black;
+  font-size: clamp(22px, 5vw, 28px);
+  font-family: 'Sarabun', sans-serif;
+  font-weight: 600;
+  margin-bottom: 24px;
+  text-align: center;
+}
+
+.ie {
+  width: 100%;
+  padding: 14px 18px;
+  margin-bottom: 16px;
+  background: #f5f5f5;
+  border: 2px solid transparent;
+  border-radius: 12px;
+  font-family: 'Sarabun', sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  color: #000;
+  outline: none;
+  transition: all .2s;
+}
+
+.ie::placeholder { color: #999; font-size: 15px; }
+.ie:focus {
+  background: #fff;
+  border-color: #EB661E;
+  box-shadow: 0 0 0 4px rgba(235, 102, 30, 0.1);
+}
+
+.ip {
+  width: 100%;
+  padding: 14px 18px;
+  margin-bottom: 24px;
+  background: #f5f5f5;
+  border: 2px solid transparent;
+  border-radius: 12px;
+  font-family: 'Sarabun', sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  color: #000;
+  outline: none;
+  transition: all .2s;
+}
+
+.ip::placeholder { color: #999; font-size: 15px; }
+.ip:focus {
+  background: #fff;
+  border-color: #EB661E;
+  box-shadow: 0 0 0 4px rgba(235, 102, 30, 0.1);
+}
+
+.btn-bg {
+  width: 100%;
+  max-width: 200px;
+  height: 48px;
+  background: #EB661E;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all .2s;
+  font-family: 'Sarabun', sans-serif;
+  font-size: 18px;
+  font-weight: 600;
+  color: white;
+  text-align: center;
+  line-height: 48px;
+  margin-bottom: 20px;
+  box-shadow: 0 4px 16px rgba(235, 102, 30, 0.3);
+}
+
+.btn-bg:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 24px rgba(235, 102, 30, 0.4);
+}
+
+.btn-bg:active {
+  transform: scale(0.98);
+}
+
+.rl {
+  font-size: 14px;
+  font-family: 'Sarabun', sans-serif;
+  text-align: center;
+}
+
+.rl .t { color: #666; }
+.rl .u {
+  color: #EB661E;
+  text-decoration: none;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.rl .u:hover { text-decoration: underline; }
+
+#toast {
+  position: fixed;
+  bottom: max(24px, env(safe-area-inset-bottom));
+  left: 50%;
+  transform: translateX(-50%) translateY(100px);
+  background: #333;
+  border: 1px solid #EB661E;
+  padding: 14px 24px;
+  border-radius: 14px;
+  font-size: 14px;
+  font-family: 'Sarabun', sans-serif;
+  z-index: 9999;
+  color: white;
+  transition: transform .3s cubic-bezier(.34, 1.56, .64, 1);
+  max-width: 85vw;
+  text-align: center;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  pointer-events: none;
+}
+
+#toast.show {
+  transform: translateX(-50%) translateY(0);
+}
+
+@media (max-height: 600px) {
+  .main-title {
+    font-size: clamp(36px, 12vw, 60px);
+    margin-bottom: 12px;
+  }
+  .card {
+    padding: 28px 20px 24px;
+  }
+  .t-title {
+    font-size: 20px;
+    margin-bottom: 16px;
+  }
+  .ie, .ip {
+    padding: 12px 16px;
+    margin-bottom: 12px;
+  }
+  .btn-bg {
+    height: 44px;
+    line-height: 44px;
+    margin-bottom: 16px;
+  }
+}
+
+@media (min-width: 768px) {
+  .card {
+    width: 380px;
+    padding: 48px 32px 40px;
+  }
+}

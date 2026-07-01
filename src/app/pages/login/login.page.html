@@ -1,0 +1,17 @@
+<div id="app">
+  <div class="bg-orange"></div>
+  <div class="main-title">PMDS</div>
+
+  <div class="card">
+    <div class="t-title">เข้าสู่ระบบ</div>
+    <input type="email" class="ie" [(ngModel)]="email" placeholder="อีเมล" autocomplete="email">
+    <input type="password" class="ip" [(ngModel)]="password" placeholder="รหัสผ่าน" autocomplete="current-password">
+    <button class="btn-bg" (click)="doLogin()">เข้าสู่ระบบ</button>
+    <div class="rl">
+      <span class="t">หากยังไม่ได้สมัครบัญชี?</span>
+      <span class="u" (click)="goRegister()">สมัครสมาชิก</span>
+    </div>
+  </div>
+</div>
+
+<div id="toast" [class.show]="toastVisible" [style.border-color]="toastType === 'good' ? '#10b981' : toastType === 'warn' ? '#f59e0b' : toastType === 'danger' ? '#ef4444' : '#EB661E'">{{ toastMessage }}</div>

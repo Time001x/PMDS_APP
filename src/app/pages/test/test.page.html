@@ -1,0 +1,226 @@
+<div id="app">
+
+  <!-- TOAST -->
+  <div id="toast" [class.show]="toastVisible" [style.border-color]="'#EB661E'">{{ toastMessage }}</div>
+
+  <!-- MODAL -->
+  <div class="modal-overlay" [class.open]="modalVisible" (click)="closeModal()">
+    <div class="modal-sheet" (click)="onModalSheetClick($event)">
+      <div class="modal-handle"></div>
+      <div [innerHTML]="modalHtml"></div>
+    </div>
+  </div>
+
+  <!-- SCREEN: TEST -->
+  <div class="screen active" id="screen-test">
+
+    <!-- Header -->
+    <div class="test-header">
+      <button class="test-back" (click)="handleBack()">‹</button>
+      <div class="test-header-info">
+        <div class="test-header-title" id="test-title">
+          <ng-container [ngSwitch]="currentView">
+            <ng-container *ngSwitchCase="'menu'">🧪 เลือกการทดสอบ</ng-container>
+            <ng-container *ngSwitchCase="'test'">
+              <ng-container [ngSwitch]="currentTestId">
+                <ng-container *ngSwitchCase="'speech'">🎤 ทดสอบเสียงพูด</ng-container>
+                <ng-container *ngSwitchCase="'tremor'">📳 ทดสอบอาการสั่น</ng-container>
+                <ng-container *ngSwitchCase="'finger'">👆 ทดสอบการแตะนิ้ว</ng-container>
+                <ng-container *ngSwitchCase="'gait'">🚶 ทดสอบการเดิน</ng-container>
+                <ng-container *ngSwitchCase="'questionnaire'">📝 แบบสอบถาม</ng-container>
+              </ng-container>
+            </ng-container>
+            <ng-container *ngSwitchCase="'history'">📊 ประวัติการทดสอบ</ng-container>
+            <ng-container *ngSwitchCase="'result'">📊 ผลการประเมิน</ng-container>
+          </ng-container>
+        </div>
+        <div class="test-header-sub">
+          <ng-container [ngSwitch]="currentView">
+            <ng-container *ngSwitchCase="'menu'">ทำครบทั้ง 5 มิติเพื่อผลที่แม่นยำ</ng-container>
+            <ng-container *ngSwitchCase="'history'">ผลการประเมินทั้งหมดของคุณ</ng-container>
+            <ng-container *ngSwitchCase="'result'">MDS-UPDRS Based Assessment</ng-container>
+          </ng-container>
+        </div>
+      </div>
+    </div>
+
+    <!-- Body -->
+    <div class="test-body" id="test-body">
+
+      <!-- ===== MENU VIEW ===== -->
+      <ng-container *ngIf="currentView === 'menu'">
+        <div class="test-grid mt-8">
+          <div class="test-card" *ngFor="let t of testMenuData" (click)="startTest(t.id)">
+            <div class="test-icon" [style.background]="t.bg">{{ t.icon }}</div>
+            <div class="test-info">
+              <div class="test-name">{{ t.name }}</div>
+              <div class="test-desc">{{ t.desc }}</div>
+            </div>
+            <div class="test-status">
+              <span class="badge badge-normal" *ngIf="t.done">✓</span>
+              <span class="badge" style="background:#f5f5f5;color:#999;border:1px solid #eee" *ngIf="!t.done">รอ</span>
+            </div>
+          </div>
+        </div>
+        <div class="mt-24">
+          <button class="btn btn-primary btn-full btn-large" *ngIf="allTestsDone" (click)="showFinalResult()">📊 ดูผลการประเมินรวม</button>
+          <p class="text-center text-muted small" *ngIf="!allTestsDone">ทดสอบครบ 5 มิติเพื่อดูผลรวม</p>
+        </div>
+        <div style="height:20px"></div>
+      </ng-container>
+
+      <!-- ===== SPEECH TEST (child component) ===== -->
+      <ng-container *ngIf="currentView === 'test' && currentTestId === 'speech'">
+        <app-speech-test (testCompleted)="onChildTestCompleted('speech', $event)"></app-speech-test>
+      </ng-container>
+
+      <!-- ===== TREMOR TEST (child component) ===== -->
+      <ng-container *ngIf="currentView === 'test' && currentTestId === 'tremor'">
+        <app-tremor-test (testCompleted)="onChildTestCompleted('tremor', $event)"></app-tremor-test>
+      </ng-container>
+
+      <!-- ===== FINGER TAP TEST (child component) ===== -->
+      <ng-container *ngIf="currentView === 'test' && currentTestId === 'finger'">
+        <app-finger-tap-test (testCompleted)="onChildTestCompleted('finger', $event)"></app-finger-tap-test>
+      </ng-container>
+
+      <!-- ===== GAIT TEST (child component) ===== -->
+      <ng-container *ngIf="currentView === 'test' && currentTestId === 'gait'">
+      <app-gait-test (testCompleted)="onChildTestCompleted('gait', $event)"></app-gait-test>
+      </ng-container>
+
+      <!-- ===== QUESTIONNAIRE (child component) ===== -->
+      <ng-container *ngIf="currentView === 'test' && currentTestId === 'questionnaire'">
+        <app-updrs-questionnaire (testCompleted)="onChildTestCompleted('questionnaire', $event)"></app-updrs-questionnaire>
+      </ng-container>
+
+      <!-- ===== HISTORY VIEW ===== -->
+      <ng-container *ngIf="currentView === 'history'">
+        <div *ngIf="historyData.length === 0" class="history-empty">
+          <div class="history-empty-icon animate-float">📋</div>
+          <h3>ยังไม่มีประวัติ</h3>
+          <p>เริ่มทดสอบเพื่อบันทึกผลการประเมินของคุณ</p>
+          <button class="btn btn-primary btn-large" (click)="renderTestMenu()">🚀 เริ่มทดสอบเลย</button>
+        </div>
+
+        <ng-container *ngIf="historyData.length > 0">
+          <div class="history-header">
+            <h2 class="history-title">📊 ประวัติการทดสอบ</h2>
+            <p class="history-subtitle">ตรวจสอบผลย้อนหลังของคุณ</p>
+          </div>
+          <div class="history-summary">
+            <div class="hs-item">
+              <div class="hs-icon">📝</div>
+              <div class="hs-val">{{ historySummary.count }}</div>
+              <div class="hs-label">ครั้งที่ทดสอบ</div>
+            </div>
+            <div class="hs-item">
+              <div class="hs-icon" [class]="historySummary.latest >= 50 ? '⚠️' : '✅'">{{ historySummary.latest >= 50 ? '⚠️' : '✅' }}</div>
+              <div class="hs-val" [style.color]="historySummary.latest >= 50 ? '#C10508' : '#05C134'">{{ historySummary.latest }}%</div>
+              <div class="hs-label">ล่าสุด</div>
+            </div>
+            <div class="hs-item">
+              <div class="hs-icon">📈</div>
+              <div class="hs-val">{{ historySummary.avg }}%</div>
+              <div class="hs-label">เฉลี่ย</div>
+            </div>
+          </div>
+
+          <!-- Detailed history list -->
+          <div class="history-list">
+            <div class="history-card" *ngFor="let h of historyData; let idx = index">
+              <div class="hc-header">
+                <div>
+                  <div class="hc-date">📅 {{ h.date }}</div>
+                  <div class="hc-time" *ngIf="h.time">🕐 {{ h.time }}</div>
+                </div>
+                <div class="hc-score-wrap">
+                  <div class="hc-score" [style.color]="h.riskPercent >= 50 ? '#C10508' : h.riskPercent >= 35 ? '#F59E0B' : '#05C134'">{{ h.riskPercent }}%</div>
+                  <div class="hc-level" [style.background]="h.riskPercent >= 50 ? 'rgba(193,5,8,0.1)' : h.riskPercent >= 35 ? 'rgba(245,158,11,0.1)' : 'rgba(5,193,52,0.1)'" [style.color]="h.riskPercent >= 50 ? '#C10508' : h.riskPercent >= 35 ? '#F59E0B' : '#05C134'">{{ h.level }}</div>
+                </div>
+              </div>
+              <div class="hc-divider"></div>
+              <div class="hc-tests">
+                <div class="hc-test-item" *ngFor="let test of getTestList()">
+                  <span class="hc-test-name">{{ test.icon }} {{ test.name }}</span>
+                  <div class="hc-test-bar-bg">
+                    <div class="hc-test-bar" [style.width.%]="Math.round((h.scores[test.id] || 0) * 100)" [style.background]="(h.scores[test.id] || 0) > 0.6 ? '#C10508' : (h.scores[test.id] || 0) > 0.35 ? '#F59E0B' : '#05C134'"></div>
+                  </div>
+                  <span class="hc-test-score" [style.color]="(h.scores[test.id] || 0) > 0.6 ? '#C10508' : (h.scores[test.id] || 0) > 0.35 ? '#F59E0B' : '#05C134'">{{ h.scores[test.id] !== undefined ? Math.round((h.scores[test.id] || 0) * 100) + '%' : '-' }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </ng-container>
+        <div style="height:20px"></div>
+      </ng-container>
+
+      <!-- ===== RESULT VIEW ===== -->
+      <ng-container *ngIf="currentView === 'result'">
+        <div class="result-header">
+          <div class="result-ring-wrap">
+            <svg width="140" height="140" style="transform:rotate(-90deg)">
+              <circle cx="70" cy="70" r="60" fill="none" stroke="var(--border)" stroke-width="10"/>
+              <circle cx="70" cy="70" r="60" fill="none" [attr.stroke]="resultColor" stroke-width="10"
+                [attr.stroke-dasharray]="getRingDashArray()" stroke-linecap="round" style="transition:stroke-dasharray 1s ease"/>
+            </svg>
+            <div class="result-ring-val">
+              <div class="result-percent" [style.color]="resultColor">{{ resultRingPercent }}</div>
+              <div class="result-label">%</div>
+            </div>
+          </div>
+          <div class="result-title" [style.color]="resultColor">{{ resultLabel }}</div>
+          <div class="result-subtitle">ความเสี่ยงโรคพาร์กินสันโดยรวม</div>
+        </div>
+
+        <div class="result-breakdown">
+          <div class="section-title mb-16">📋 ผลแยกตามมิติ</div>
+          <div class="breakdown-item" *ngFor="let s of resultScores">
+            <div class="breakdown-icon">{{ s.icon }}</div>
+            <div class="breakdown-info">
+              <div class="breakdown-name">{{ s.name }}</div>
+              <div class="risk-bar-track" style="margin-top:6px"><div class="risk-bar-fill" [style.width.%]="s.score" [style.background]="s.color"></div></div>
+            </div>
+            <div class="breakdown-score" [style.color]="s.color">{{ s.score }}%</div>
+          </div>
+        </div>
+
+        <div class="result-note">
+          <strong>⚠️ คำเตือนสำคัญ:</strong> ผลการประเมินนี้เป็น<strong>เพียงการคัดกรองเบื้องต้น</strong>เท่านั้น
+          ไม่สามารถใช้แทนการวินิจฉัยโดยแพทย์ผู้เชี่ยวชาญได้
+          <ng-container *ngIf="resultRingPercent >= 50"><br><br><strong>💡 แนะนำ:</strong> ควรพบแพทย์ผู้เชี่ยวชาญด้านระบบประสาทเพื่อรับการตรวจวินิจฉัยอย่างละเอียด</ng-container>
+        </div>
+
+        <div class="result-actions">
+          <button class="btn btn-primary btn-full btn-large" (click)="navTo('home')">🏠 กลับหน้าหลัก</button>
+          <button class="btn btn-outline btn-full" (click)="navTo('test?view=history')">📊 ดูประวัติทั้งหมด</button>
+          <button class="btn btn-ghost btn-full" (click)="restartTests()">🔄 ทดสอบใหม่อีกครั้ง</button>
+        </div>
+        <div style="height:20px"></div>
+      </ng-container>
+
+    </div>
+
+    <!-- Bottom Nav -->
+    <div class="bottom-nav">
+      <button class="nav-item" (click)="navTo('home')">
+        <span class="nav-icon">🏠</span>
+        <span class="nav-label">หน้าหลัก</span>
+      </button>
+      <button class="nav-item active" (click)="navTo('test')">
+        <span class="nav-icon">🧪</span>
+        <span class="nav-label">ทดสอบ</span>
+      </button>
+      <button class="nav-item" (click)="navTo('test?view=history')">
+        <span class="nav-icon">📊</span>
+        <span class="nav-label">ประวัติ</span>
+      </button>
+      <button class="nav-item" (click)="navTo('profile')">
+        <span class="nav-icon">👤</span>
+        <span class="nav-label">โปรไฟล์</span>
+      </button>
+    </div>
+
+  </div>
+
+</div>

@@ -1,0 +1,83 @@
+<!-- ===== TREMOR TEST ===== -->
+
+<!-- Before: Intro -->
+<div class="test-intro-card" *ngIf="!tremorDone() && !testActive()">
+  <img src="assets/icons/tremor/tremors.png" alt="Tremor Test" class="test-intro-img">
+  <h2 class="test-intro-title">วัดอาการสั่น</h2>
+  <p class="test-intro-desc">ถือโทรศัพท์เหยียดแขนออกไปด้านหน้า ขนานกับพื้น พยายามถือให้นิ่งที่สุด</p>
+  <div class="test-intro-steps">
+    <div class="tis-item"><span class="tis-num">1</span>เหยียดแขนออกไปด้านหน้า</div>
+    <div class="tis-item"><span class="tis-num">2</span>ถือโทรศัพท์ให้นิ่งที่สุด</div>
+    <div class="tis-item"><span class="tis-num">3</span>รอ 15 วินาที</div>
+  </div>
+  <button class="btn btn-primary btn-large btn-full" (click)="startTest()" [disabled]="testActive() || tremorDone()">
+    <span class="btn-icon">📳</span> เริ่มวัดอาการสั่น
+  </button>
+</div>
+
+<!-- During: Active -->
+<div class="test-active-card" *ngIf="testActive()">
+  <div class="test-active-visual">
+    <img src="assets/icons/tremor/tremors1.png" alt="Recording" class="test-active-img">
+    <div class="tremor-waves">
+      <span class="tw-bar" *ngFor="let i of [1,2,3,4,5,6,7,8,9,10]" [class.active]="testActive()"></span>
+    </div>
+  </div>
+  <div class="record-timer font-mono">{{ tremorTimer() }}</div>
+  <div class="test-active-status">{{ tremorStatus() }}</div>
+  <div class="tremor-real-time">
+    <div class="rt-item"><span class="rt-label">X</span><span class="rt-value">{{ sensorAccX().toFixed(2) }}</span></div>
+    <div class="rt-item"><span class="rt-label">Y</span><span class="rt-value">{{ sensorAccY().toFixed(2) }}</span></div>
+    <div class="rt-item"><span class="rt-label">Z</span><span class="rt-value">{{ sensorAccZ().toFixed(2) }}</span></div>
+  </div>
+  <div class="test-sensor-badge">
+    <span class="tsb-dot"></span> กำลังบันทึก...
+  </div>
+</div>
+
+<!-- Results -->
+<div class="test-result-card" *ngIf="tremorDone() && tremorResults()">
+  <div class="test-result-title">📳 ผลการวัดอาการสั่น</div>
+
+  <div class="test-result-item">
+    <div class="tri-icon tri-icon-speed">📶</div>
+    <div class="tri-info">
+      <div class="tri-label">ความถี่การสั่น</div>
+      <div class="tri-bar-bg"><div class="tri-bar" [style.width.%]="tremorResults()!.freqPercent" [style.background]="tremorResults()!.freqColor"></div></div>
+    </div>
+    <div class="tri-value" [style.color]="tremorResults()!.freqColor">{{ tremorResults()!.frequency }} <span class="tri-unit">Hz</span></div>
+  </div>
+
+  <div class="test-result-item">
+    <div class="tri-icon tri-icon-balance">💥</div>
+    <div class="tri-info">
+      <div class="tri-label">ความรุนแรง</div>
+      <div class="tri-bar-bg"><div class="tri-bar" [style.width.%]="tremorResults()!.severityPercent" [style.background]="tremorResults()!.severityColor"></div></div>
+    </div>
+    <div class="tri-value" [style.color]="tremorResults()!.severityColor">{{ tremorResults()!.severity }} <span class="tri-unit">g</span></div>
+  </div>
+
+  <div class="test-result-item">
+    <div class="tri-icon tri-icon-regularity">⏱️</div>
+    <div class="tri-info">
+      <div class="tri-label">ระยะเวลาทดสอบ</div>
+      <div class="tri-bar-bg"><div class="tri-bar" [style.width.%]="100" style="background:var(--accent-teal)"></div></div>
+    </div>
+    <div class="tri-value" style="color:var(--accent-teal)">{{ tremorResults()!.duration }} <span class="tri-unit">วิ</span></div>
+  </div>
+
+  <div class="test-result-total">
+    <div class="trt-label">คะแนนรวม</div>
+    <div class="trt-ring">
+      <svg width="110" height="110" style="transform:rotate(-90deg)">
+        <circle cx="55" cy="55" r="46" fill="none" stroke="var(--border)" stroke-width="8"/>
+        <circle cx="55" cy="55" r="46" fill="none"
+          [attr.stroke]="tremorResults()!.totalScore >= 70 ? '#05C134' : tremorResults()!.totalScore >= 45 ? '#F59E0B' : '#C10508'"
+          stroke-width="8" [attr.stroke-dasharray]="getTremorRingDash()" stroke-linecap="round"/>
+      </svg>
+      <div class="trt-value" [style.color]="tremorResults()!.totalScore >= 70 ? '#05C134' : tremorResults()!.totalScore >= 45 ? '#F59E0B' : '#C10508'">{{ tremorResults()!.totalScore }}<span class="trt-unit">%</span></div>
+    </div>
+  </div>
+</div>
+
+<div class="test-sensor-note" *ngIf="!tremorDone()">📡 เซ็นเซอร์: Accelerometer + Gyroscope (DeviceMotion API)</div>

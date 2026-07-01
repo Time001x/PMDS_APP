@@ -1,0 +1,7 @@
+{
+  "name": "PMDS APP",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular-standalone"
+}

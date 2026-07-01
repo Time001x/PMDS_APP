@@ -1,0 +1,89 @@
+<div id="app">
+
+  <!-- TOAST -->
+  <div id="toast"></div>
+
+  <!-- SCREEN: HOME -->
+  <div class="screen active" id="screen-home">
+
+    <!-- Top Bar -->
+    <div class="topbar">
+      <div class="topbar-logo">
+        <div class="logo-mark">PD</div>
+        <span class="logo-text">PMDS</span>
+      </div>
+      <div class="topbar-right">
+        <button class="btn-icon" (click)="refreshHome()" title="รีเฟรช">🔄</button>
+      </div>
+    </div>
+
+    <!-- Content -->
+    <div class="home-content" id="home-content">
+      <div class="home-greeting">
+        <div class="greeting-small">สวัสดี,</div>
+        <div class="greeting-name">{{ currentUser?.name }}</div>
+        <div class="greeting-sub">พร้อมสำหรับการตรวจวันนี้แล้วหรือยัง?</div>
+      </div>
+
+      <div class="risk-card card-glow mb-24">
+        <div class="risk-card-top">
+          <div>
+            <div class="risk-label">ความเสี่ยงล่าสุด</div>
+            <div class="risk-value" [style.color]="riskColor">{{ riskPercent }}{{ riskPercent !== '--' ? '%' : '' }}</div>
+            <div class="risk-level" [style.color]="riskColor">{{ riskLevel }}</div>
+          </div>
+          <div>
+            <span class="badge" [class.badge-risk]="lastResult && getRiskValue() >= 50" [class.badge-normal]="lastResult && getRiskValue() < 50" [class.badge-teal]="!lastResult">
+              {{ lastResult ? 'ตรวจ ' + totalTests + ' ครั้ง' : 'ยังไม่ได้ตรวจ' }}
+            </span>
+          </div>
+        </div>
+        <div class="risk-bars">
+          <div class="risk-bar-row" *ngFor="let t of testBars">
+            <div class="risk-bar-label">{{ t.shortName }}</div>
+            <div class="risk-bar-track"><div class="risk-bar-fill" [style.width.%]="lastResult ? t.pct : 0" [style.background]="t.color"></div></div>
+            <div class="font-mono small" [style.color]="t.color" style="width:32px;text-align:right">{{ lastResult ? t.pct : '--' }}</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section-title">ประวัติล่าสุด</div>
+      <div class="history-list">
+        <div class="history-item" *ngFor="let h of recentHistory" (click)="navTo('test?view=history')" style="cursor:pointer">
+          <div class="history-icon">📋</div>
+          <div class="history-info">
+            <div class="history-date">{{ h.date }}</div>
+            <div class="history-score" [style.color]="h.isRisk ? '#C10508' : '#05C134'">{{ h.riskPercent }}%</div>
+          </div>
+          <span class="badge" [class.badge-risk]="h.isRisk" [class.badge-normal]="!h.isRisk">{{ h.badgeText }}</span>
+        </div>
+        <div *ngIf="recentHistory.length === 0" class="text-center text-muted small" style="padding:24px 0;color:#888">
+          ยังไม่มีประวัติการทดสอบ<br>เริ่มการทดสอบได้เลย 👆
+        </div>
+      </div>
+      <div style="height:20px"></div>
+    </div>
+
+    <!-- Bottom Nav -->
+    <div class="bottom-nav">
+      <button class="nav-item active" (click)="navTo('home')">
+        <span class="nav-icon">🏠</span>
+        <span class="nav-label">หน้าหลัก</span>
+      </button>
+      <button class="nav-item" (click)="navTo('test')">
+        <span class="nav-icon">🧪</span>
+        <span class="nav-label">ทดสอบ</span>
+      </button>
+      <button class="nav-item" (click)="navTo('test?view=history')">
+        <span class="nav-icon">📊</span>
+        <span class="nav-label">ประวัติ</span>
+      </button>
+      <button class="nav-item" (click)="navTo('profile')">
+        <span class="nav-icon">👤</span>
+        <span class="nav-label">โปรไฟล์</span>
+      </button>
+    </div>
+
+  </div>
+
+</div>

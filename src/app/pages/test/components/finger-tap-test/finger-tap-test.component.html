@@ -1,0 +1,110 @@
+<!-- ===== FINGER TAP TEST ===== -->
+
+<!-- Phase 0: Select Hand -->
+<div class="test-intro-card" *ngIf="fingerPhase() === 0">
+  <img src="assets/icons/finger/finger.png" alt="Finger Test" class="test-intro-img">
+  <h2 class="test-intro-title">👆 ทดสอบการแตะนิ้ว</h2>
+  <p class="test-intro-desc">ใช้นิ้วชี้และนิ้วกลางกดสลับกันเร็วที่สุดที่ทำได้ตลอดเวลา</p>
+  <div class="test-intro-steps">
+    <div class="tis-item"><span class="tis-num">1</span>ใช้นิ้วชี้และนิ้วกลาง</div>
+    <div class="tis-item"><span class="tis-num">2</span>แตะต่อเนื่อง 15 วินาที</div>
+    <div class="tis-item"><span class="tis-num">3</span>ทางนั้นจะทดสอบความเร็วในการตอบสนอง</div>
+    <div class="tis-item"><span class="tis-num">4</span>แตะหน้าให้เร็วและสม่ำเสมอที่สุด</div>
+  </div>
+  <h3 style="font-size:16px;font-weight:600;color:var(--accent-teal);margin-bottom:12px">เลือกมือที่ต้องการทดสอบ</h3>
+  <div class="hand-select-row">
+    <button class="hand-btn" [class.selected]="fingerHand() === 'left'" (click)="selectHand('left')">
+      <div class="hand-btn-icon">🤚</div>
+      <div class="hand-btn-label">มือซ้าย</div>
+    </button>
+    <button class="hand-btn" [class.selected]="fingerHand() === 'right'" (click)="selectHand('right')">
+      <div class="hand-btn-icon">✋</div>
+      <div class="hand-btn-label">มือขวา</div>
+    </button>
+  </div>
+  <button class="btn btn-primary btn-large btn-full" (click)="startTestPhase()" [disabled]="fingerPhase() !== 0">
+    <span class="btn-icon">▶</span> เริ่มทดสอบมือ{{ fingerHand() === 'right' ? 'ขวา' : 'ซ้าย' }}
+  </button>
+</div>
+
+<!-- Phase 1/2: Testing -->
+<div class="test-active-card" *ngIf="fingerPhase() === 1 || fingerPhase() === 2">
+  <div class="test-active-visual">
+    <img src="assets/icons/finger/finger1.png" alt="Testing" class="test-active-img">
+  </div>
+  <div class="finger-test-header">
+    <div class="finger-hand-label">{{ fingerPhase() === 1 ? '✋ มือขวา' : '🤚 มือซ้าย' }}</div>
+    <div class="record-timer font-mono">{{ fingerTimer() }}</div>
+  </div>
+  <div class="finger-instruction">ใช้นิ้ว<strong>ชี้</strong>และ<strong>กลาง</strong>กดสลับกันเร็วที่สุด!</div>
+  <div class="finger-tap-area">
+    <!-- แก้บั๊ก: รองรับทั้ง touch, mouse, และ pointer events เพื่อให้ทำงานได้ทุกอุปกรณ์ -->
+    <div class="finger-circle finger-circle-1"
+         [class.active]="fingerCircleActive() === 1"
+         [class.flash]="fingerCircleActive() === 1"
+         (touchstart)="onFingerTap(1, $event)"
+         (mousedown)="onFingerTap(1, $event)"
+         (pointerdown)="onFingerTap(1, $event)">
+      <div class="circle-label">1</div>
+      <div class="circle-finger">{{ fingerPhase() === 2 ? 'กลาง' : 'ชี้' }}</div>
+    </div>
+    <div class="finger-circle finger-circle-2"
+         [class.active]="fingerCircleActive() === 2"
+         [class.flash]="fingerCircleActive() === 2"
+         (touchstart)="onFingerTap(2, $event)"
+         (mousedown)="onFingerTap(2, $event)"
+         (pointerdown)="onFingerTap(2, $event)">
+      <div class="circle-label">2</div>
+      <div class="circle-finger">{{ fingerPhase() === 2 ? 'ชี้' : 'กลาง' }}</div>
+    </div>
+  </div>
+  <div class="finger-stats-row">
+    <div class="finger-stat">
+      <div class="finger-stat-val font-mono">{{ fingerTotalTaps() }}</div>
+      <div class="finger-stat-label">ครั้ง</div>
+    </div>
+    <div class="finger-stat">
+      <div class="finger-stat-val font-mono">{{ fingerCorrectCount() }}</div>
+      <div class="finger-stat-label">ถูก</div>
+    </div>
+  </div>
+  <div class="test-sensor-badge"><span class="tsb-dot"></span> กำลังทดสอบ...</div>
+</div>
+
+<!-- Results -->
+<div class="test-result-card" *ngIf="fingerPhase() === 3 && fingerResults()">
+  <div class="test-result-title">👆 ผลการทดสอบการแตะนิ้ว</div>
+
+  <div class="hand-result-block">
+    <div class="hand-result-label">✋ มือขวา</div>
+    <div class="finger-result-row" *ngFor="let item of fingerResults()!.right">
+      <span class="fr-label">{{ item.label }}</span>
+      <div class="tri-bar-bg"><div class="tri-bar" [style.width.%]="item.barWidth" [style.background]="item.color"></div></div>
+      <span class="tri-value" [style.color]="item.color">{{ item.value }}</span>
+    </div>
+  </div>
+
+  <div class="hand-result-block">
+    <div class="hand-result-label">🤚 มือซ้าย</div>
+    <div class="finger-result-row" *ngFor="let item of fingerResults()!.left">
+      <span class="fr-label">{{ item.label }}</span>
+      <div class="tri-bar-bg"><div class="tri-bar" [style.width.%]="item.barWidth" [style.background]="item.color"></div></div>
+      <span class="tri-value" [style.color]="item.color">{{ item.value }}</span>
+    </div>
+  </div>
+
+  <div class="test-result-total">
+    <div class="trt-label">คะแนนรวม</div>
+    <div class="trt-ring">
+      <svg width="110" height="110" style="transform:rotate(-90deg)">
+        <circle cx="55" cy="55" r="46" fill="none" stroke="var(--border)" stroke-width="8"/>
+        <circle cx="55" cy="55" r="46" fill="none"
+          [attr.stroke]="fingerResults()!.totalScore >= 70 ? '#05C134' : fingerResults()!.totalScore >= 45 ? '#F59E0B' : '#C10508'"
+          stroke-width="8" [attr.stroke-dasharray]="getFingerRingDash()" stroke-linecap="round"/>
+      </svg>
+      <div class="trt-value" [style.color]="fingerResults()!.totalScore >= 70 ? '#05C134' : fingerResults()!.totalScore >= 45 ? '#F59E0B' : '#C10508'">
+        {{ fingerResults()!.totalScore }}<span class="trt-unit">/100</span>
+      </div>
+    </div>
+  </div>
+</div>
